@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regularization</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-color);
+      margin-bottom: 2.25rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .card {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      padding: 1.75rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      background: var(--theme-accent-subtle);
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .formula {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      padding: 0.6rem 0.9rem;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid var(--theme-border);
+      color: var(--theme-color);
+    }
+
+    .visible .label,
+    .visible h2,
+    .visible .grid-3 {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">14 · Regularization</div>
+    <h2>Regularization shapes the optimization path</h2>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon">⚖️</div>
+        <h3>L2 / Weight decay</h3>
+        <p>Penalizes large weights. Shrinks parameters toward zero each step, which changes the effective loss surface that the optimizer navigates.</p>
+        <div class="formula">L<sub>total</sub> = L + λ ‖θ‖<sup>2</sup></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎲</div>
+        <h3>Dropout</h3>
+        <p>Randomly zeros activations during training. Injects noise into the optimization trajectory, which can lead to more robust minima.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛑</div>
+        <h3>Early stopping</h3>
+        <p>Halt training when validation loss stops improving. The optimizer never reaches the training minimum — and that is intentional.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>

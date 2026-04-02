@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summary and Discussion</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .headline {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-accent);
+      margin-bottom: 2rem;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .card {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      padding: 1.75rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      letter-spacing: -0.02em;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .card li {
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.55;
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .card li::before {
+      content: '→';
+      color: var(--theme-accent);
+      flex-shrink: 0;
+    }
+
+    .questions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+    }
+
+    .q-card {
+      background: var(--theme-accent-subtle);
+      border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 18px;
+      padding: 1.5rem 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .q-num {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--theme-accent);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .q-card p {
+      font-size: 0.97rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .visible .label,
+    .visible .headline,
+    .visible .grid,
+    .visible .questions {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">Summary &amp; Discussion</div>
+    <div class="headline">GD → SGD → Momentum → RMSProp / Adam</div>
+    <div class="grid">
+      <div class="card">
+        <h3>The conceptual arc</h3>
+        <ul>
+          <li>Gradient gives a direction to move</li>
+          <li>SGD makes training scalable via minibatches</li>
+          <li>Momentum stabilizes and accelerates updates</li>
+          <li>Adaptive methods rescale steps per parameter</li>
+          <li>Learning rate is the most impactful knob</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>The bigger picture</h3>
+        <ul>
+          <li>Optimization speed does not equal generalization quality</li>
+          <li>Regularization, init, and normalization all shape training</li>
+          <li>Sharp vs flat minima matter for test performance</li>
+          <li>Debugging training is a core ML engineering skill</li>
+        </ul>
+      </div>
+    </div>
+    <div class="questions">
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <p>Why can SGD outperform Adam on test accuracy even if Adam reaches lower training loss faster?</p>
+      </div>
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <p>Why is the learning rate often more important than the choice of optimizer?</p>
+      </div>
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <p>When would you prefer an adaptive optimizer over SGD with momentum?</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>

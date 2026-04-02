@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motivation</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-color);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1.75rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .lead {
+      font-size: 1.1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .formula {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 1.2rem;
+      line-height: 2;
+      padding: 0.9rem 1.25rem;
+      border-radius: 12px;
+      background: white;
+      border: 1px solid var(--theme-border);
+      color: var(--theme-color);
+    }
+
+    .note {
+      padding: 1.1rem 1.4rem;
+      border-left: 3px solid var(--theme-accent);
+      background: var(--theme-accent-subtle);
+      border-radius: 0 12px 12px 0;
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.6;
+    }
+
+    .note strong {
+      color: var(--theme-color);
+    }
+
+    .card {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      padding: 1.75rem 2rem;
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .card li {
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.5;
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .card li::before {
+      content: '→';
+      color: var(--theme-accent);
+      flex-shrink: 0;
+    }
+
+    .visible .label,
+    .visible h2,
+    .visible .layout {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">1 · Motivation</div>
+    <h2>Training = minimizing a loss function</h2>
+    <div class="layout">
+      <div class="left">
+        <p class="lead">The model has parameters <strong>θ</strong>. The loss tells us how bad current predictions are. Optimization updates parameters to reduce that loss.</p>
+        <div class="formula">θ ← θ − η ∇<sub>θ</sub>L(θ)</div>
+        <div class="note">Optimization answers one concrete question: <strong>how do we move parameters so the loss decreases?</strong></div>
+      </div>
+      <div class="card">
+        <h3>Why it matters</h3>
+        <ul>
+          <li>Same architecture can train very differently with another optimizer</li>
+          <li>Learning rate often matters more than model tweaks</li>
+          <li>Optimization affects speed, stability, and final test quality</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>

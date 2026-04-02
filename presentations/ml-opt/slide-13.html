@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Rate</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-color);
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .card {
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card.bad-high { border: 2px solid #fca5a5; }
+    .card.bad-low  { border: 2px solid #fcd34d; }
+    .card.good     { border: 2px solid #6ee7b7; }
+
+    canvas {
+      width: 100%;
+      aspect-ratio: 300 / 130;
+      display: block;
+      background: white;
+      border-bottom: 1px solid;
+      cursor: pointer;
+    }
+
+    .bad-high canvas { border-bottom-color: #fca5a5; }
+    .bad-low  canvas { border-bottom-color: #fcd34d; }
+    .good     canvas { border-bottom-color: #6ee7b7; }
+
+    .card-body {
+      padding: 1.25rem 1.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .bad-high .card-body { background: #fff5f5; }
+    .bad-low  .card-body { background: #fffdf0; }
+    .good     .card-body { background: #f0fdf8; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .bad-high .dot { background: #dc2626; }
+    .bad-low  .dot { background: #ca8a04; }
+    .good     .dot { background: #059669; }
+
+    .card h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .card.bad-high h3 { color: #dc2626; }
+    .card.bad-low  h3 { color: #ca8a04; }
+    .card.good     h3 { color: #059669; }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .card li {
+      font-size: 0.95rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.5;
+      display: flex;
+      gap: 0.55rem;
+    }
+
+    .bad-high li::before { content: '✗'; color: #dc2626; flex-shrink: 0; font-weight: 700; }
+    .bad-low  li::before { content: '!'; color: #ca8a04; flex-shrink: 0; font-weight: 700; }
+    .good     li::before { content: '✓'; color: #059669; flex-shrink: 0; font-weight: 700; }
+
+    .note {
+      padding: 1.1rem 1.4rem;
+      border-left: 3px solid var(--theme-accent);
+      background: var(--theme-accent-subtle);
+      border-radius: 0 12px 12px 0;
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+    }
+
+    .visible .label,
+    .visible h2,
+    .visible .grid-3,
+    .visible .note {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">11 · The Learning Rate</div>
+    <h2>Learning rate is often the most important hyperparameter</h2>
+    <div class="grid-3">
+
+      <div class="card bad-high">
+        <canvas id="cv-high" width="300" height="130" title="Click to replay"></canvas>
+        <div class="card-body">
+          <div class="card-header"><div class="dot"></div><h3>Too high</h3></div>
+          <ul>
+            <li>Loss oscillates or diverges</li>
+            <li>Updates overshoot the minimum</li>
+            <li>Can produce NaN in gradients</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card bad-low">
+        <canvas id="cv-low" width="300" height="130" title="Click to replay"></canvas>
+        <div class="card-body">
+          <div class="card-header"><div class="dot"></div><h3>Too low</h3></div>
+          <ul>
+            <li>Training is painfully slow</li>
+            <li>Can get trapped in flat regions</li>
+            <li>Wastes compute budget</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card good">
+        <canvas id="cv-good" width="300" height="130" title="Click to replay"></canvas>
+        <div class="card-body">
+          <div class="card-header"><div class="dot"></div><h3>Well-tuned</h3></div>
+          <ul>
+            <li>Fast, stable loss decrease</li>
+            <li>Smooth gradient updates</li>
+            <li>Makes the best use of optimizer strengths</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <div class="note">Before switching optimizers or changing architecture — tune the learning rate first. It is the single highest-leverage knob in training.</div>
+  </div>
+
+  <script>
+    // Parabola: f(x) = a*(x-150)^2 + 55   minimum at (150, 55)
+    // f'(x) = 2a*(x-150)
+    // chosen so f(20) ≈ f(280) ≈ 108
+    const MIN_X = 150, MIN_Y = 55;
+    const A = (108 - MIN_Y) / ((280 - MIN_X) ** 2); // ≈ 0.00284
+
+    function parabY(x) { return A * (x - MIN_X) ** 2 + MIN_Y; }
+    function parabGrad(x) { return 2 * A * (x - MIN_X); }
+
+    const SUBS = ['₀','₁','₂','₃','₄','₅','₆','₇','₈','₉'];
+
+    function makeAnim({ id, lr, maxSteps, color, fillRgb, startDelay }) {
+      const canvas = document.getElementById(id);
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      let timer = null, stepIdx = 0, pts = [];
+
+      function buildPath() {
+        pts = [40];
+        for (let i = 0; i < maxSteps; i++) {
+          const prev = pts[pts.length - 1];
+          const next = prev - lr * parabGrad(prev);
+          pts.push(Math.max(8, Math.min(292, next)));
+          if (Math.abs(next - MIN_X) < 0.8) break;
+        }
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, W, H);
+
+        // axis labels
+        ctx.font = 'italic 11px system-ui, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillStyle = 'rgba(0,0,0,0.28)';
+        ctx.fillText('L', 10, 16);
+        ctx.textAlign = 'right';
+        ctx.fillText('θ', W - 6, H - 6);
+
+        // baseline
+        ctx.beginPath();
+        ctx.moveTo(16, H - 10);
+        ctx.lineTo(W - 10, H - 10);
+        ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // parabola fill
+        ctx.beginPath();
+        ctx.moveTo(20, parabY(20));
+        for (let x = 21; x <= 280; x++) ctx.lineTo(x, parabY(x));
+        ctx.lineTo(280, H - 10);
+        ctx.lineTo(20, H - 10);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(${fillRgb}, 0.08)`;
+        ctx.fill();
+
+        // parabola curve
+        ctx.beginPath();
+        ctx.moveTo(20, parabY(20));
+        for (let x = 21; x <= 280; x++) ctx.lineTo(x, parabY(x));
+        ctx.strokeStyle = 'rgba(0,0,0,0.18)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // minimum marker
+        ctx.beginPath();
+        ctx.arc(MIN_X, MIN_Y, 5.5, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([3, 2.5]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.font = '9px system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillText('min', MIN_X, MIN_Y - 9);
+
+        const visible = pts.slice(0, stepIdx + 1);
+
+        // connecting lines
+        if (visible.length > 1) {
+          ctx.beginPath();
+          ctx.moveTo(visible[0], parabY(visible[0]));
+          for (let i = 1; i < visible.length; i++) {
+            ctx.lineTo(visible[i], parabY(visible[i]));
+          }
+          ctx.strokeStyle = color + 'bb';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([5, 3.5]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // dots + labels
+        for (let i = 0; i < visible.length; i++) {
+          const x = visible[i], y = parabY(x);
+          ctx.beginPath();
+          ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+          ctx.fillStyle = color;
+          ctx.fill();
+
+          // label above dot (flip below if near top)
+          const labelY = y < 22 ? y + 16 : y - 8;
+          ctx.font = 'bold 9px system-ui, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = color;
+          ctx.fillText('θ' + (SUBS[i] || i), x, labelY);
+        }
+
+        // "→ min" hint for too-low after final step
+        if (stepIdx >= pts.length - 1 && Math.abs(pts[pts.length-1] - MIN_X) > 20) {
+          const lastX = pts[pts.length - 1];
+          const lastY = parabY(lastX);
+          ctx.font = '8.5px system-ui, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = 'rgba(0,0,0,0.3)';
+          ctx.fillText('still far from min…', (lastX + MIN_X) / 2, Math.min(lastY, MIN_Y) - 14);
+        }
+      }
+
+      function tick() {
+        stepIdx++;
+        render();
+        if (stepIdx < pts.length - 1) {
+          timer = setTimeout(tick, 620);
+        } else {
+          timer = setTimeout(restart, 2400);
+        }
+      }
+
+      function restart() {
+        stepIdx = 0;
+        render();
+        timer = setTimeout(tick, 900);
+      }
+
+      const api = {
+        start() {
+          buildPath();
+          stepIdx = 0;
+          timer = setTimeout(() => { render(); timer = setTimeout(tick, 900); }, startDelay);
+        },
+        stop() { clearTimeout(timer); }
+      };
+
+      canvas.addEventListener('click', () => {
+        api.stop();
+        api.start();
+      });
+
+      return api;
+    }
+
+    const configs = [
+      // Too high: lr=340 → ratio = 1 - 2a*lr ≈ -0.93, oscillates
+      { id: 'cv-high', lr: 340,  maxSteps: 7, color: '#dc2626', fillRgb: '220,38,38',  startDelay: 0   },
+      // Too low:  lr=12  → ratio ≈ 0.93, converges very slowly
+      { id: 'cv-low',  lr: 12,   maxSteps: 7, color: '#ca8a04', fillRgb: '202,138,4',  startDelay: 300 },
+      // Good:     lr=150 → ratio ≈ 0.15, converges in ~3 steps
+      { id: 'cv-good', lr: 150,  maxSteps: 6, color: '#059669', fillRgb: '5,150,105',  startDelay: 600 },
+    ];
+
+    let anims = [];
+
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible');
+        anims = configs.map(makeAnim);
+        anims.forEach(a => a.start());
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible');
+        anims.forEach(a => a.stop());
+        anims = [];
+      }
+    });
+  </script>
+</body>
+</html>

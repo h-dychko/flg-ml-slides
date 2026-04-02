@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practical Takeaways</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-color);
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .pill {
+      padding: 0.55rem 1.1rem;
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--theme-color);
+    }
+
+    .pill.accent {
+      background: var(--theme-accent-subtle);
+      border-color: rgba(99,102,241,0.35);
+      color: var(--theme-accent);
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+    }
+
+    .card {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      padding: 1.5rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      letter-spacing: -0.02em;
+    }
+
+    .card ol {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      counter-reset: steps;
+    }
+
+    .card ol li {
+      counter-increment: steps;
+      font-size: 0.97rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.5;
+      display: flex;
+      gap: 0.65rem;
+      align-items: baseline;
+    }
+
+    .card ol li::before {
+      content: counter(steps);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: white;
+      background: var(--theme-accent);
+      border-radius: 50%;
+      width: 1.2rem;
+      height: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .card ol li strong { color: var(--theme-color); }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .card ul li {
+      font-size: 0.97rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.5;
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .card ul li::before {
+      content: '→';
+      color: var(--theme-accent);
+      flex-shrink: 0;
+    }
+
+    .card ul li strong { color: var(--theme-color); }
+
+    .visible .label,
+    .visible h2,
+    .visible .pill-list,
+    .visible .grid {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">20 · Practical Takeaways</div>
+    <h2>Practical defaults for training neural networks</h2>
+
+    <div class="pill-list">
+      <div class="pill accent">Learning rate is the highest-leverage knob</div>
+      <div class="pill">Adam + 3×10<sup>−4</sup> is a strong starting point</div>
+      <div class="pill accent">SGD + momentum often wins on final accuracy</div>
+      <div class="pill">Cosine annealing is a safe default schedule</div>
+      <div class="pill">Add warmup for transformers and large batches</div>
+      <div class="pill">Monitor train and validation loss together</div>
+      <div class="pill accent">Optimization speed ≠ generalization quality</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Default workflow for a new task</h3>
+        <ol>
+          <li>Start with <strong>Adam</strong>, <span>lr = 3×10<sup>−4</sup></span>, warmup + cosine schedule</li>
+          <li>Confirm loss is decreasing and training is stable</li>
+          <li>Tune the learning rate before anything else</li>
+          <li>Switch to <strong>SGD + momentum</strong> once stable if generalization matters</li>
+          <li>Add warmup if using large batches or a transformer architecture</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>When the defaults stop working</h3>
+        <ul>
+          <li><strong>Loss is NaN or explodes</strong> — LR too high, or exploding gradients; clip or reduce LR</li>
+          <li><strong>Training is stuck or very slow</strong> — LR too low, bad initialization, or vanishing gradients</li>
+          <li><strong>Train loss drops, val loss doesn't</strong> — overfitting; add regularization or reduce capacity</li>
+          <li><strong>Adam converges fast but SGD beats it on test</strong> — sharp vs flat minima; try SGD with a schedule</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>

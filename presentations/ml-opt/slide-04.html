@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Batch Gradient Descent</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-color);
+      margin-bottom: 2.25rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .card {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      padding: 1.75rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .formulas {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .formula {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      padding: 0.75rem 1.1rem;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid var(--theme-border);
+      color: var(--theme-color);
+    }
+
+    .pros-cons { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .pc-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.5;
+    }
+
+    .pc-icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      margin-top: 0.15rem;
+    }
+
+    .pc-icon.pro { background: #dcfce7; color: #16a34a; }
+    .pc-icon.con { background: #fee2e2; color: #dc2626; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--theme-color-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .visible .label,
+    .visible h2,
+    .visible .grid {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">3 · Gradient Descent</div>
+    <h2>Batch Gradient Descent</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Algorithm</h3>
+        <p>Compute the gradient across the <strong>entire dataset</strong>, then take a single parameter update.</p>
+        <div class="formulas">
+          <div class="formula">g = ∇<sub>θ</sub> L(θ) &nbsp; <span style="color:var(--theme-color-muted);font-size:0.9rem">// full dataset</span></div>
+          <div class="formula">θ ← θ − η g</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Pros &amp; cons</h3>
+        <div class="pros-cons">
+          <div class="section-label">Pros</div>
+          <div class="pc-row"><span class="pc-icon pro">✓</span>Stable, low-variance gradient estimate</div>
+          <div class="pc-row"><span class="pc-icon pro">✓</span>Well-studied convergence properties</div>
+          <div class="section-label" style="margin-top:0.5rem">Cons</div>
+          <div class="pc-row"><span class="pc-icon con">✗</span>Extremely expensive on large datasets</div>
+          <div class="pc-row"><span class="pc-icon con">✗</span>One update per full pass — very slow</div>
+          <div class="pc-row"><span class="pc-icon con">✗</span>Impractical for modern deep learning</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>

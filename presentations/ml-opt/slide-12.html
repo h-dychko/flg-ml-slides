@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Optimizer Evolution</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-color);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .step {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      padding: 1.5rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      position: relative;
+    }
+
+    .step::after {
+      content: '→';
+      position: absolute;
+      right: -0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--theme-accent);
+      font-size: 1.1rem;
+      font-weight: 700;
+      z-index: 2;
+    }
+
+    .step:last-child::after { display: none; }
+
+    .step.highlight {
+      background: var(--theme-accent-subtle);
+      border-color: var(--theme-accent);
+      border-width: 2px;
+    }
+
+    .step-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+    }
+
+    .step h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--theme-color);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .step p {
+      font-size: 0.92rem;
+      color: var(--theme-color-muted);
+      line-height: 1.55;
+      margin: 0;
+      flex: 1;
+    }
+
+    .step .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(99,102,241,0.1);
+      color: var(--theme-accent);
+      border: 1px solid rgba(99,102,241,0.2);
+      letter-spacing: 0.04em;
+    }
+
+    .visible .label,
+    .visible h2,
+    .visible .timeline {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">10 · Optimizer Evolution</div>
+    <h2>Each optimizer fixes a problem with the previous one</h2>
+    <div class="timeline">
+      <div class="step">
+        <div class="step-num">Step 1</div>
+        <h3>Gradient Descent</h3>
+        <p>Foundational. Full-batch gradient, stable but slow and impractical at scale.</p>
+        <span class="tag">stable</span>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 2</div>
+        <h3>SGD</h3>
+        <p>Minibatch updates — much faster per step. Noise is a feature, not just a bug.</p>
+        <span class="tag">scalable</span>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 3</div>
+        <h3>Momentum</h3>
+        <p>Smooths gradient direction. Dampens oscillation, accelerates useful progress.</p>
+        <span class="tag">smoother</span>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 4</div>
+        <h3>AdaGrad / RMSProp</h3>
+        <p>Per-parameter learning rates. RMSProp fixes AdaGrad's vanishing LR problem.</p>
+        <span class="tag">adaptive</span>
+      </div>
+      <div class="step highlight">
+        <div class="step-num">Step 5</div>
+        <h3>Adam</h3>
+        <p>Momentum + adaptive scaling + bias correction. The standard default today.</p>
+        <span class="tag">default today</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>

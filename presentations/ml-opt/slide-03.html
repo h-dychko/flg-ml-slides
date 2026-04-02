@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loss Landscapes</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-color);
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .vis-block {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .vis-block img {
+      width: 100%;
+      display: block;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+    }
+
+    .card {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 16px;
+      padding: 1.1rem 1.4rem;
+    }
+
+    .card.accent-border {
+      border-color: var(--theme-accent);
+      border-width: 2px;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .quote-block {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      line-height: 1.4;
+      padding: 1.35rem 1.75rem;
+      background: var(--theme-accent-subtle);
+      border-radius: 16px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+    }
+
+    .accent { color: var(--theme-accent); }
+    .accent-alt { color: var(--theme-accent-alt); }
+
+    .visible .label,
+    .visible h2,
+    .visible .vis-block,
+    .visible .grid-3,
+    .visible .quote-block {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">2 · Loss Landscape</div>
+    <h2>Loss landscapes are not simple bowls</h2>
+
+    <div class="vis-block">
+      <img src="landscapes.png" alt="Three loss landscape types: convex (single bowl), non-convex (multiple peaks and valleys), saddle point (curved surface with a saddle)"/>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3>Convex</h3>
+        <p>One clean basin, one global minimum. Easier theory, easier guarantees. Rare in deep learning.</p>
+      </div>
+      <div class="card accent-border">
+        <h3>Non-convex</h3>
+        <p>Neural networks create complicated surfaces with many valleys, flat regions, and ridges.</p>
+      </div>
+      <div class="card">
+        <h3>Saddle points</h3>
+        <p>Gradient is near zero, but the point is not a minimum. More common than local minima in high dimensions.</p>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      We usually are <span class="accent">not</span> searching for the exact global minimum — we want a <span class="accent-alt">good basin</span> that trains well and generalizes well.
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>

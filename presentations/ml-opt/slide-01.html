@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Optimization for ML</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: var(--theme-accent-subtle);
+      border: 1px solid rgba(99,102,241,0.25);
+      color: var(--theme-accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    h1 {
+      font-size: 4.75rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.02;
+      color: var(--theme-color);
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .lead {
+      font-size: 1.2rem;
+      color: var(--theme-color-muted);
+      line-height: 1.6;
+      max-width: 820px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+    }
+
+    .card {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      padding: 1.75rem 2rem;
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      padding: 0;
+    }
+
+    .card li {
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.5;
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .card li::before {
+      content: '→';
+      color: var(--theme-accent);
+      flex-shrink: 0;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .highlight {
+      color: var(--theme-accent);
+      font-weight: 700;
+    }
+
+    .visible .badge,
+    .visible h1,
+    .visible .lead,
+    .visible .grid {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="badge">Optimization for ML</div>
+    <h1>Optimization for<br>Machine Learning</h1>
+    <p class="lead">How models actually learn: from gradient descent basics to SGD, AdaGrad, RMSProp, Adam, and the practical tricks that make training work.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>What this talk covers</h3>
+        <ul>
+          <li>Why optimization matters</li>
+          <li>Loss landscapes and gradients</li>
+          <li>Optimizer evolution: GD → SGD → Adam</li>
+          <li>Learning rates, schedules, and debugging</li>
+          <li>Optimization vs generalization</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Main message</h3>
+        <p>In practice, optimization is not just about finding a minimum. It is about finding a <span class="highlight">good solution fast</span>, stably, and in a way that still generalizes to unseen data.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>

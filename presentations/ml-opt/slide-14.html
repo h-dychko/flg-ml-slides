@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LR Schedules — Monotonic</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-color);
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 1.5rem;
+      align-items: start;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    /* Schedule table */
+    .sch-table {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--theme-border);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .sch-row {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      border-bottom: 1px solid var(--theme-border);
+    }
+
+    .sch-row:last-child { border-bottom: none; }
+
+    .sch-row.header {
+      background: var(--theme-accent-subtle);
+    }
+
+    .sch-cell {
+      padding: 0.75rem 1.1rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .sch-cell:first-child {
+      border-right: 1px solid var(--theme-border);
+      font-weight: 700;
+      color: var(--theme-color);
+    }
+
+    .sch-cell:last-child {
+      color: var(--theme-color-secondary);
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.9rem;
+    }
+
+    .sch-row.header .sch-cell {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      font-family: inherit;
+      padding-top: 0.65rem;
+      padding-bottom: 0.65rem;
+    }
+
+    .sch-row:nth-child(even):not(.header) { background: var(--theme-surface); }
+    .sch-row:nth-child(odd):not(.header)  { background: white; }
+
+    /* Image card */
+    .img-card {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .img-card img {
+      width: 100%;
+      display: block;
+      object-fit: contain;
+    }
+
+    .visible .label,
+    .visible h2,
+    .visible .layout {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">12 · LR Schedules</div>
+    <h2>Decrease the learning rate over training</h2>
+
+    <div class="layout">
+      <div class="sch-table">
+        <div class="sch-row header">
+          <div class="sch-cell">Schedule</div>
+          <div class="sch-cell">Formula &amp; notes</div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-cell">Constant</div>
+          <div class="sch-cell">η<sub>t</sub> = η<sub>0</sub> &nbsp;— baseline, no decay</div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-cell">Step decay</div>
+          <div class="sch-cell">η<sub>t</sub> = η<sub>0</sub> · γ<sup>⌊t/s⌋</sup> &nbsp;— drop by γ every s epochs</div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-cell">Exponential decay</div>
+          <div class="sch-cell">η<sub>t</sub> = η<sub>0</sub> · γ<sup>t</sup> &nbsp;— smooth continuous reduction</div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-cell">Cosine annealing</div>
+          <div class="sch-cell">η<sub>t</sub> = η<sub>min</sub> + ½(η<sub>0</sub> − η<sub>min</sub>)(1 + cos(πt/T))</div>
+        </div>
+        <div class="sch-row">
+          <div class="sch-cell">Warmup + cosine</div>
+          <div class="sch-cell">Linear ramp for t<sub>w</sub> steps, then cosine decay — essential for transformers</div>
+        </div>
+      </div>
+
+      <div class="img-card">
+        <img src="lr_schedules_monotonic.png" alt="Comparison of monotonic LR schedules over training steps"/>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>

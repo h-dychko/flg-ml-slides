@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdamW</title>
+  <link rel="stylesheet" href="../../themes/eclipse.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1440px;
+    }
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--theme-accent);
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    h2 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--theme-color);
+      margin-bottom: 2.25rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    .card {
+      background: var(--theme-surface);
+      border: 1px solid var(--theme-border);
+      border-radius: 20px;
+      padding: 1.75rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      letter-spacing: -0.02em;
+    }
+
+    .formulas {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .formula {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid var(--theme-border);
+      color: var(--theme-color);
+    }
+
+    .formula.highlight {
+      border-color: rgba(99,102,241,0.4);
+      background: rgba(99,102,241,0.05);
+    }
+
+    .diff-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .diff-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+    }
+
+    .diff-badge {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+      margin-top: 0.1rem;
+    }
+
+    .diff-badge.adam { background: rgba(99,102,241,0.1); color: var(--theme-accent); border: 1px solid rgba(99,102,241,0.25); }
+    .diff-badge.adamw { background: rgba(16,163,127,0.1); color: #0d9488; border: 1px solid rgba(16,163,127,0.3); }
+
+    .diff-text {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      padding: 0.55rem 0.9rem;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid var(--theme-border);
+      color: var(--theme-color);
+    }
+
+    .diff-text .strike {
+      text-decoration: line-through;
+      color: var(--theme-color-muted);
+    }
+
+    .diff-text .added {
+      color: #0d9488;
+      font-weight: 700;
+    }
+
+    .pros-cons { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .pc-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 1rem;
+      color: var(--theme-color-secondary);
+      line-height: 1.5;
+    }
+
+    .pc-icon {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      margin-top: 0.15rem;
+    }
+
+    .pc-icon.pro { background: #dcfce7; color: #16a34a; }
+    .pc-icon.con { background: #fee2e2; color: #dc2626; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--theme-color-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .quote-block {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--theme-color);
+      line-height: 1.45;
+      padding: 1.25rem 1.5rem;
+      background: var(--theme-accent-subtle);
+      border-radius: 16px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease 0.35s, transform 0.5s ease 0.35s;
+    }
+
+    .accent { color: var(--theme-accent); }
+    .accent-green { color: #0d9488; }
+
+    .visible .label,
+    .visible h2,
+    .visible .grid,
+    .visible .quote-block {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    sub, sup {
+      font-size: 75%;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+    }
+    sub { bottom: -0.25em; }
+    sup { top: -0.5em; }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grid-lines"></div>
+
+  <div class="content">
+    <div class="label">10 · AdamW</div>
+    <h2>AdamW — Decoupled Weight Decay</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>The fix: decouple weight decay from gradients</h3>
+        <div class="diff-block">
+          <div class="diff-row">
+            <div class="diff-badge adam">Adam</div>
+            <div class="diff-text">g̃<sub>t</sub> = g<sub>t</sub> <span class="strike">+ λ θ<sub>t</sub></span> &nbsp;<span style="color:var(--theme-color-muted);font-size:0.82rem">// L2 added to gradient → gets scaled by adaptive rate</span></div>
+          </div>
+          <div class="diff-row">
+            <div class="diff-badge adamw">AdamW</div>
+            <div class="diff-text">θ<sub>t+1</sub> = θ<sub>t</sub> − η · m̂<sub>t</sub> / (√v̂<sub>t</sub> + ε) <span class="added">− η λ θ<sub>t</sub></span> &nbsp;<span style="color:var(--theme-color-muted);font-size:0.82rem">// weight decay applied directly</span></div>
+          </div>
+        </div>
+        <div class="formulas">
+          <div class="formula">m<sub>t</sub>, v<sub>t</sub>, m̂<sub>t</sub>, v̂<sub>t</sub> &nbsp;— same as Adam</div>
+          <div class="formula highlight">θ<sub>t+1</sub> = (1 − η λ) θ<sub>t</sub> − η · m̂<sub>t</sub> / (√v̂<sub>t</sub> + ε) &nbsp;<span style="color:var(--theme-color-muted);font-size:0.85rem">// λ = weight decay</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Why it matters</h3>
+        <div class="pros-cons">
+          <div class="section-label">Problem with Adam + L2</div>
+          <div class="pc-row"><span class="pc-icon con">✗</span><span>L2 penalty is added to the gradient, then divided by v̂<sub>t</sub> — the adaptive rate weakens regularization for frequently updated params</span></div>
+          <div class="pc-row"><span class="pc-icon con">✗</span>Weight decay strength varies per parameter — harder to tune λ</div>
+          <div class="section-label" style="margin-top:0.5rem">AdamW fix</div>
+          <div class="pc-row"><span class="pc-icon pro">✓</span>Weight decay is applied uniformly, independent of the gradient magnitude</div>
+          <div class="pc-row"><span class="pc-icon pro">✓</span>Better generalization — especially for Transformers &amp; large models</div>
+          <div class="pc-row"><span class="pc-icon pro">✓</span>Default optimizer in Hugging Face, PyTorch Lightning, and most LLM training</div>
+        </div>
+      </div>
+    </div>
+    <div class="quote-block">
+      <span class="accent">Adam + L2 ≠ weight decay</span> — they only coincide for SGD. <span class="accent-green">AdamW decouples them</span>, making regularization predictable and effective across all parameters.
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === 'slideEnter') {
+        document.querySelector('.content').classList.add('visible')
+      }
+      if (e.data?.type === 'slideExit') {
+        document.querySelector('.content').classList.remove('visible')
+      }
+    })
+  </script>
+</body>
+</html>
